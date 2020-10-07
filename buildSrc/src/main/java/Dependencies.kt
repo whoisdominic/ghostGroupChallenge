@@ -21,4 +21,5 @@ object Versions {
     const val retrofit_moshi_converter = "2.8.1"
     const val glide = "4.11.0"
     const val constraint_layout = "2.0.1"
+    const val material = "1.2.1"
 }
