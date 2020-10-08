@@ -47,7 +47,7 @@ class YelpRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         fun bind(yelpResult: YelpBusiness){
             yelpName.setText(yelpResult.name)
-            val reviewText: String = "Top rated review: ${yelpResult.topReview}"
+            val reviewText: String = "Top Rated Review: ${yelpResult.topReview}"
             yelpReview.setText(reviewText)
             val ratingText: String = "Rating: ${yelpResult.rating.toString()}"
             rating.setText(ratingText)

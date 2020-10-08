@@ -55,7 +55,7 @@ class MainActivity: Activity() {
     private fun initRecyclerView(){
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
-            val topSpacingItemDecloration = TopSpacingItemDecoration(30)
+            val topSpacingItemDecloration = TopSpacingItemDecoration(22)
             addItemDecoration(topSpacingItemDecloration)
             yelpAdapter = YelpRecyclerAdapter()
             adapter = yelpAdapter
