@@ -1,7 +1,14 @@
 package com.ngmatt.weedmapsandroidcodechallenge
 
 import android.app.Activity
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.WindowManager
+import android.widget.SearchView
+import android.widget.TextView
+import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
 
@@ -11,27 +18,52 @@ import kotlinx.android.synthetic.main.activity_main.*
 class MainActivity: Activity() {
 
 
-    private lateinit var blogAdapter: YelpRecyclerAdapter
+    private lateinit var yelpAdapter: YelpRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         initRecyclerView()
         addDataSet()
+        // Hides the action bar
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
+        actionBar?.hide()
+
+        // search
+        val searchBar = findViewById<SearchView>(R.id.searchView)
+        val results = findViewById<TextView>(R.id.query)
+
+        searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                searchBar.clearFocus()
+                results.setText("Showing results for: $query")
+                yelpSearch(query)
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                return true
+            }
+        })
+    }
+
+    private fun yelpSearch(query: String?){
+        Log.i("Check", query!!)
     }
 
     private fun addDataSet(){
         val data = DataSource.createDataSet()
-        blogAdapter.submitList(data)
+        yelpAdapter.submitList(data)
     }
+
 
     private fun initRecyclerView(){
         recycler_view.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
             val topSpacingItemDecloration = TopSpacingItemDecoration(30)
             addItemDecoration(topSpacingItemDecloration)
-            blogAdapter = YelpRecyclerAdapter()
-            adapter = blogAdapter
+            yelpAdapter = YelpRecyclerAdapter()
+            adapter = yelpAdapter
         }
     }
 }
