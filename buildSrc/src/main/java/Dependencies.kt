@@ -22,4 +22,6 @@ object Versions {
     const val glide = "4.11.0"
     const val constraint_layout = "2.0.1"
     const val material = "1.2.1"
+    const val retrofit_converter_gson = "2.4.0"
+    const val gson = "2.8.5"
 }

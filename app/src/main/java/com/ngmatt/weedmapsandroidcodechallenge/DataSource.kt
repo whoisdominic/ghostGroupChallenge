@@ -84,4 +84,8 @@ class DataSource{
             return yelpData
         }
     }
+
+    private fun searchYelp(query: String?){
+
+    }
 }
