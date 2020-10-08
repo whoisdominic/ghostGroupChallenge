@@ -1,6 +1,6 @@
 package com.ngmatt.weedmapsandroidcodechallenge.models
 
-data class Yelp(
+data class YelpObject(
     val businesses: List<Business>,
     val region: Region,
     val total: Int

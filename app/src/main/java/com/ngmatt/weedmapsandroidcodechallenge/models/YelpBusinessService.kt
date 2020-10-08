@@ -13,6 +13,5 @@ public interface YelpBusinessService {
         @Query("term") searchTerm: String,
         @Query("latitude") latitude: Float,
         @Query("longitude") longitude: Float,
-    )
-            : Call<Any>
+    ) : Call<YelpObject>
 }

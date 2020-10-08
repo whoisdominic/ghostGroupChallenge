@@ -4,6 +4,7 @@ import android.util.Log
 import com.ngmatt.weedmapsandroidcodechallenge.models.Business
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusinessService
+import com.ngmatt.weedmapsandroidcodechallenge.models.YelpObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -27,13 +28,13 @@ class DataSource{
 
             val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
             val yelpService = retrofit.create(YelpBusinessService::class.java)
-            yelpService.searchYelp("Bearer $API_KEY", "$query" , LATITUDE, LONGITUDE ).enqueue(object : Callback<Any> {
+            yelpService.searchYelp("Bearer $API_KEY", "$query" , LATITUDE, LONGITUDE ).enqueue(object : Callback<YelpObject> {
 
-                override fun onResponse(call: Call<Any>, response: Response<Any>) {
-                    Log.i(TAG, "onResponse ${response.body()}")
+                override fun onResponse(call: Call<YelpObject>, response: Response<YelpObject>) {
+                    Log.i(TAG, "onResponse $response")
                 }
 
-                override fun onFailure(call: Call<Any>, t: Throwable) {
+                override fun onFailure(call: Call<YelpObject>, t: Throwable) {
                     Log.i(TAG, "onFailure $t")
                 }
 
