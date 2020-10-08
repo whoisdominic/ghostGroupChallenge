@@ -1,13 +1,45 @@
 package com.ngmatt.weedmapsandroidcodechallenge
 
+import android.util.Log
+import com.ngmatt.weedmapsandroidcodechallenge.models.Business
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
+import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusinessService
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 
+private const val LATITUDE: Float = 37.786882F
+private const val LONGITUDE: Float = -122.399972F
+private const val LOCATION: String = "Los Angeles"
+private const val BASE_URL: String = "https://api.yelp.com/v3/"
+private const val API_KEY: String = "HLI3xHwmknNcMui1Xvh-tYi6gSGvYvCHEhJ_za0QNomeSGiMZRZ9qMTAEKoIo7Ob9w-FtdO3Rp1BDyd6gMhwKZdZcQjlqGixYfmlwpW-HiyGxSGCWf6s3kvTKQR-X3Yx"
+private const val TAG: String = "MainActivity"
 class DataSource{
 
     companion object{
 
         fun createDataSet(query: String?): ArrayList<YelpBusiness>{
             val yelpData = ArrayList<YelpBusiness>()
+
+            val pulledData = ArrayList<Business>()
+
+            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
+            val yelpService = retrofit.create(YelpBusinessService::class.java)
+            yelpService.searchYelp("Bearer $API_KEY", "$query" , LATITUDE, LONGITUDE ).enqueue(object : Callback<Any> {
+
+                override fun onResponse(call: Call<Any>, response: Response<Any>) {
+                    Log.i(TAG, "onResponse ${response.body()}")
+                }
+
+                override fun onFailure(call: Call<Any>, t: Throwable) {
+                    Log.i(TAG, "onFailure $t")
+                }
+
+            })
+
+
             yelpData.add(
                 YelpBusiness(
                     "Uno Dos Tacos",
@@ -85,7 +117,4 @@ class DataSource{
         }
     }
 
-    private fun searchYelp(query: String?){
-
-    }
 }
