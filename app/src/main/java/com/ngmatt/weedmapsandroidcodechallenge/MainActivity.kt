@@ -23,8 +23,6 @@ class MainActivity: Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        initRecyclerView()
-        addDataSet()
         // Hides the action bar
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_FULLSCREEN
         actionBar?.hide()
@@ -37,7 +35,8 @@ class MainActivity: Activity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchBar.clearFocus()
                 results.setText("Showing results for: $query")
-                yelpSearch(query)
+                initRecyclerView()
+                addDataSet(query)
                 return true
             }
 
@@ -47,12 +46,8 @@ class MainActivity: Activity() {
         })
     }
 
-    private fun yelpSearch(query: String?){
-        Log.i("Check", query!!)
-    }
-
-    private fun addDataSet(){
-        val data = DataSource.createDataSet()
+    private fun addDataSet(query: String?){
+        val data = DataSource.createDataSet(query)
         yelpAdapter.submitList(data)
     }
 
