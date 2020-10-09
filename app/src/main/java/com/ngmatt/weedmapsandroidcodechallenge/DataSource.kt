@@ -7,11 +7,8 @@ import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusinessService
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpObject
 import com.ngmatt.weedmapsandroidcodechallenge.DataReviews
 import kotlinx.coroutines.*
+import retrofit2.*
 
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.Timer
 import kotlin.concurrent.schedule
@@ -29,49 +26,34 @@ class DataSource{
 
             val yelpSearch =  mutableListOf<Business>()
 
-            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-            val yelpService = retrofit.create(YelpBusinessService::class.java)
-            yelpService.searchYelp("Bearer $API_KEY", "$query" , LATITUDE, LONGITUDE ).enqueue(object : Callback<YelpObject> {
+            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build().create(YelpBusinessService::class.java)
 
-                override fun onResponse(call: Call<YelpObject>, response: Response<YelpObject>) {
-                    Log.i(TAG, "onResponse $response")
-                    val responseBody = response.body()
-                    if(responseBody == null){
-                        Log.i(TAG, "Error in response")
-                    } else {
-                        yelpSearch.addAll(responseBody.businesses)
-                        for (location in yelpSearch){
-                            Timer("SettingUp", false).schedule(1000) {
-                                addTopReviews(location)
+            GlobalScope.launch(Dispatchers.IO) {
+                val response = retrofit.searchYelp("Bearer $API_KEY", "$query" , LATITUDE, LONGITUDE )
+                    yelpSearch.addAll(response.body()!!.businesses)
+                   if(response.isSuccessful) {
+                       var counter = 0
+                       for (location in yelpSearch) {
+                            if (counter > 4){
+                                Thread.sleep(1001L)
+                                counter = 0
                             }
-                        }
-                    }
-                }
+                           val topReview = DataReviews.createDataSet(location.id)
 
-                private fun addTopReviews(location: Business) = runBlocking {
-                    val topReview = async { DataReviews.createDataSet(location.id) }
-                    yelpData.add(
-                        YelpBusiness(
-                            location.name,
-                            topReview.await(),
-                            location.image_url,
-                            location.rating
-                        )
-                    )
-                }
-
-                override fun onFailure(call: Call<YelpObject>, t: Throwable) {
-                    Log.i(TAG, "onFailure $t")
-                }
-
-            })
+                           yelpData.add(
+                               YelpBusiness(
+                                   location.name,
+                                   topReview,
+                                   location.image_url,
+                                   location.rating
+                               ))
+                           counter++
+                       }
+                   } else {
+                       // TODO: Handle Error
+                   }
+            }
             return yelpData
-        }
-        private fun getReviews(id: String): String {
-//            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-//            val yelpServiceReview = retrofit.create(YelpBusinessService::class.java)
-//                yelpServiceReview.searchReview("Bearer $API_KEY", id)
-            return "fake review $id"
         }
     }
 }

@@ -11,6 +11,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.*
 
 /**
  * Created by Matt Ng on 9/14/20
@@ -35,8 +36,12 @@ class MainActivity: Activity() {
             override fun onQueryTextSubmit(query: String?): Boolean {
                 searchBar.clearFocus()
                 results.setText("Showing results for: $query")
+
                 initRecyclerView()
-                addDataSet(query)
+                GlobalScope.launch(Dispatchers.IO) {
+                    addDataSet(query)
+                    joinAll()
+                }
                 return true
             }
 
@@ -46,7 +51,7 @@ class MainActivity: Activity() {
         })
     }
 
-    private fun addDataSet(query: String?){
+    suspend fun addDataSet(query: String?) {
         val data = DataSource.createDataSet(query)
         yelpAdapter.submitList(data)
     }
