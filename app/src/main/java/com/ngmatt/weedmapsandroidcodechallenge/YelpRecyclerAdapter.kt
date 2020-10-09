@@ -4,6 +4,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RatingBar
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
@@ -43,14 +44,14 @@ class YelpRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val yelpImage: ImageView = itemView.yelp_image
         val yelpName: TextView = itemView.yelp_name
         val yelpReview: TextView = itemView.topReview
-        val rating: TextView = itemView.rating
+        val rating: RatingBar = itemView.rating
 
         fun bind(yelpResult: YelpBusiness){
             yelpName.setText(yelpResult.name)
             val reviewText: String = "Top Rated Review: ${yelpResult.topReview}"
             yelpReview.setText(reviewText)
-            val ratingText: String = "Rating: ${yelpResult.rating.toString()}"
-            rating.setText(ratingText)
+            rating.rating = yelpResult.rating.toFloat()
+
             val requestOptions = RequestOptions()
                 .placeholder(R.drawable.ic_launcher_background)
                 .error(R.drawable.ic_launcher_background)

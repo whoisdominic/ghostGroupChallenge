@@ -6,12 +6,15 @@ import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusinessService
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpObject
 import com.ngmatt.weedmapsandroidcodechallenge.DataReviews
+import kotlinx.coroutines.*
 
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.Timer
+import kotlin.concurrent.schedule
 private const val LATITUDE: Float = 37.786882F
 private const val LONGITUDE: Float = -122.399972F
 private const val BASE_URL: String = "https://api.yelp.com/v3/"
@@ -38,17 +41,23 @@ class DataSource{
                     } else {
                         yelpSearch.addAll(responseBody.businesses)
                         for (location in yelpSearch){
-                            Log.i(TAG, "each location ${location.id}")
-                            yelpData.add(
-                                YelpBusiness(
-                                    location.name,
-                                    DataReviews.createDataSet(location.id),
-                                    location.image_url,
-                                    location.rating
-                            )
-                            )
+                            Timer("SettingUp", false).schedule(1000) {
+                                addTopReviews(location)
+                            }
                         }
                     }
+                }
+
+                private fun addTopReviews(location: Business) = runBlocking {
+                    val topReview = async { DataReviews.createDataSet(location.id) }
+                    yelpData.add(
+                        YelpBusiness(
+                            location.name,
+                            topReview.await(),
+                            location.image_url,
+                            location.rating
+                        )
+                    )
                 }
 
                 override fun onFailure(call: Call<YelpObject>, t: Throwable) {

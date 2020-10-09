@@ -47,23 +47,27 @@
                 android:text="Name of business"
                 android:textColor="#000"
                 android:textSize="19sp"
+                android:layout_marginLeft="8dp"
                 />
 
-            <TextView
-                android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/rating"
-            android:text="Rating"
-            android:textSize="15sp"
-            android:layout_marginTop="10dp"
-            />
+
+            <RatingBar
+                android:id="@+id/rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:numStars="5"
+                android:rating="4.5"
+                android:stepSize="0.5" />
+
+
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/topReview"
                 android:text="Top Review"
                 android:textSize="15sp"
-                android:layout_marginTop="10dp"
+                android:layout_marginTop="5dp"
                 />
 
 

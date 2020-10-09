@@ -38,9 +38,10 @@ class DataReviews {
                     override fun onFailure(call: Call<ReviewObject>, t: Throwable) {
                         Log.i(TAG, "onFailure $t")
                     }
-
                 })
-            return review
+            val foundReview = review
+            review = ""
+            return foundReview
         }
     }
 }
