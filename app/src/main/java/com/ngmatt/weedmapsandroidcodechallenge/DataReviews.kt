@@ -2,6 +2,10 @@ package com.ngmatt.weedmapsandroidcodechallenge
 
 import android.util.Log
 import com.ngmatt.weedmapsandroidcodechallenge.models.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -15,33 +19,22 @@ private const val TAG: String = "DataReview"
 class DataReviews {
 
     companion object {
-        var review = ""
 
-        fun createDataSet(id: String): String{
-            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build()
-            val yelpService = retrofit.create(YelpBusinessService::class.java)
-                yelpService.searchReview("Bearer $API_KEY", id).enqueue(object : Callback<ReviewObject> {
+        fun createDataSet(id: String, onGetReview: (String) -> Unit) {
+            var review: String = ""
+            val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build().create(YelpBusinessService::class.java)
+            GlobalScope.launch(Dispatchers.IO) {
+                val response = retrofit.searchReview("Bearer $API_KEY", id)
+                if (response.isSuccessful){
 
-                    override fun onResponse(call: Call<ReviewObject>, response: Response<ReviewObject>) {
-                        Log.i(TAG, "onResponse $response")
-                        val responseBody = response.body()
-                        if(responseBody == null){
-                            Log.i(TAG, "Error in response")
-                        } else {
-                            val responseBody = response.body()
-                            val topReview = responseBody!!.reviews[0].text
-                            Log.i(TAG, "Response ${responseBody.reviews[0].text}")
-                                review = topReview
-                        }
-                    }
+                    review = response.body()!!.reviews[0].text
 
-                    override fun onFailure(call: Call<ReviewObject>, t: Throwable) {
-                        Log.i(TAG, "onFailure $t")
-                    }
-                })
-            val foundReview = review
-            review = ""
-            return foundReview
+                } else {
+                    // TODO: Handle Error
+                }
+
+                onGetReview(review)
+            }
         }
     }
 }
