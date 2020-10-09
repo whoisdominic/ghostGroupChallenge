@@ -48,11 +48,8 @@ class DataSource{
                                    ))
                            }
                            DataReviews.createDataSet(location.id, onSuccess)
-
-
                            counter++
                        }
-
                        onSuccessCall(yelpData)
                    } else {
                        // TODO: Handle Error

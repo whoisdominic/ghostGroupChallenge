@@ -40,11 +40,9 @@ class MainActivity: Activity() {
 
         searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
-                Log.d(TAG, "search query -> $query")
 
                 searchBar.clearFocus()
                 results.setText("Showing results for: $query")
-
 
                 GlobalScope.launch(Dispatchers.IO) {
                     addDataSet(query)
@@ -61,16 +59,12 @@ class MainActivity: Activity() {
 
     fun addDataSet(query: String?) {
         val onSuccess: (ArrayList<YelpBusiness>) -> Unit = { data ->
-            Log.d(TAG, "yelpB -> $data")
             runOnUiThread {
                 yelpAdapter.submitList(data)
                 yelpAdapter.notifyDataSetChanged()
-
             }
-
         }
         DataSource.createDataSet(query, onSuccess)
-
     }
 
 

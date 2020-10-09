@@ -40,16 +40,16 @@
             android:padding="10dp"
             android:id="@+id/container1"
             >
+
+
             <TextView
+                android:id="@+id/yelp_name"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/yelp_name"
+                android:layout_marginLeft="8dp"
                 android:text="Name of business"
                 android:textColor="#000"
-                android:textSize="19sp"
-                android:layout_marginLeft="8dp"
-                />
-
+                android:textSize="22sp" />
 
             <RatingBar
                 android:id="@+id/rating"
