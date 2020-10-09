@@ -1,5 +1,6 @@
 package com.ngmatt.weedmapsandroidcodechallenge
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,10 @@ import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
 import kotlinx.android.synthetic.main.layout_yelp_list_item.view.*
 
 class YelpRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
+    companion object {
+        const val TAG = "RecyclerAdapter"
+    }
 
     private var items: List<YelpBusiness> = ArrayList()
 
@@ -48,8 +53,13 @@ class YelpRecyclerAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
         fun bind(yelpResult: YelpBusiness){
             yelpName.setText(yelpResult.name)
-            val reviewText: String = "Top Rated Review: ${yelpResult.topReview}"
-            yelpReview.setText(reviewText)
+            if (yelpResult.topReview.length > 85){
+                val reviewText: String = "Top Rated Review: ${yelpResult.topReview.take(85)}..."
+                yelpReview.setText(reviewText)
+            } else {
+                val reviewText: String = "Top Rated Review: ${yelpResult.topReview} ..."
+                yelpReview.setText(reviewText)
+            }
             rating.rating = yelpResult.rating.toFloat()
 
             val requestOptions = RequestOptions()
