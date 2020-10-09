@@ -21,7 +21,7 @@ class DataSource{
 
     companion object{
 
-        fun createDataSet(query: String?): ArrayList<YelpBusiness>{
+        fun createDataSet(query: String?, onSuccessCall: (ArrayList<YelpBusiness>) -> Unit) {
             val yelpData = ArrayList<YelpBusiness>()
 
             val yelpSearch =  mutableListOf<Business>()
@@ -38,22 +38,26 @@ class DataSource{
                                 Thread.sleep(1001L)
                                 counter = 0
                             }
-                           val topReview = DataReviews.createDataSet(location.id)
+                           val onSuccess: (String) -> Unit = {topReview ->
+                               yelpData.add(
+                                   YelpBusiness(
+                                       location.name,
+                                       topReview,
+                                       location.image_url,
+                                       location.rating
+                                   ))
+                           }
+                           DataReviews.createDataSet(location.id, onSuccess)
 
-                           yelpData.add(
-                               YelpBusiness(
-                                   location.name,
-                                   topReview,
-                                   location.image_url,
-                                   location.rating
-                               ))
+
                            counter++
                        }
+
+                       onSuccessCall(yelpData)
                    } else {
                        // TODO: Handle Error
                    }
             }
-            return yelpData
         }
     }
 }

@@ -10,6 +10,7 @@ import android.widget.SearchView
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
@@ -18,6 +19,9 @@ import kotlinx.coroutines.*
  */
 class MainActivity: Activity() {
 
+    companion object {
+        const val TAG = "MainActivity"
+    }
 
     private lateinit var yelpAdapter: YelpRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -32,12 +36,16 @@ class MainActivity: Activity() {
         val searchBar = findViewById<SearchView>(R.id.searchView)
         val results = findViewById<TextView>(R.id.query)
 
+        initRecyclerView()
+
         searchBar.setOnQueryTextListener(object :SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean {
+                Log.d(TAG, "search query -> $query")
+
                 searchBar.clearFocus()
                 results.setText("Showing results for: $query")
 
-                initRecyclerView()
+
                 GlobalScope.launch(Dispatchers.IO) {
                     addDataSet(query)
                     joinAll()
@@ -51,9 +59,18 @@ class MainActivity: Activity() {
         })
     }
 
-    suspend fun addDataSet(query: String?) {
-        val data = DataSource.createDataSet(query)
-        yelpAdapter.submitList(data)
+    fun addDataSet(query: String?) {
+        val onSuccess: (ArrayList<YelpBusiness>) -> Unit = { data ->
+            Log.d(TAG, "yelpB -> $data")
+            runOnUiThread {
+                yelpAdapter.submitList(data)
+                yelpAdapter.notifyDataSetChanged()
+
+            }
+
+        }
+        DataSource.createDataSet(query, onSuccess)
+
     }
 
 

@@ -20,7 +20,7 @@ class DataReviews {
 
     companion object {
 
-        fun createDataSet(id: String): String {
+        fun createDataSet(id: String, onGetReview: (String) -> Unit) {
             var review: String = ""
             val retrofit = Retrofit.Builder().baseUrl(BASE_URL).addConverterFactory(GsonConverterFactory.create()).build().create(YelpBusinessService::class.java)
             GlobalScope.launch(Dispatchers.IO) {
@@ -32,8 +32,9 @@ class DataReviews {
                 } else {
                     // TODO: Handle Error
                 }
+
+                onGetReview(review)
             }
-            return review
         }
     }
 }
