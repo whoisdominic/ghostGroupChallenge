@@ -15,14 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.*
 
 /**
- * Created by Matt Ng on 9/14/20
+ * Dominic Cobb, Thank you for giving me the opportunity to demonstrate my skill set.
  */
 class MainActivity: Activity() {
-
-    companion object {
-        const val TAG = "MainActivity"
-    }
-
     private lateinit var yelpAdapter: YelpRecyclerAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +61,6 @@ class MainActivity: Activity() {
         }
         DataSource.createDataSet(query, onSuccess)
     }
-
 
     private fun initRecyclerView(){
         recycler_view.apply {

@@ -15,7 +15,6 @@ import kotlin.reflect.typeOf
 
 private const val BASE_URL: String = "https://api.yelp.com/v3/"
 private const val API_KEY: String = "HLI3xHwmknNcMui1Xvh-tYi6gSGvYvCHEhJ_za0QNomeSGiMZRZ9qMTAEKoIo7Ob9w-FtdO3Rp1BDyd6gMhwKZdZcQjlqGixYfmlwpW-HiyGxSGCWf6s3kvTKQR-X3Yx"
-private const val TAG: String = "DataReview"
 class DataReviews {
 
     companion object {
@@ -26,13 +25,8 @@ class DataReviews {
             GlobalScope.launch(Dispatchers.IO) {
                 val response = retrofit.searchReview("Bearer $API_KEY", id)
                 if (response.isSuccessful){
-
-                    review = response.body()!!.reviews[0].text
-
-                } else {
-                    // TODO: Handle Error
+                    review = response.body()!!.reviews[0].text.replace("\\s".toRegex(), " ")
                 }
-
                 onGetReview(review)
             }
         }

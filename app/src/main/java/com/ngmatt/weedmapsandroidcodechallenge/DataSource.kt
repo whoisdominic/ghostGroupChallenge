@@ -1,6 +1,8 @@
 package com.ngmatt.weedmapsandroidcodechallenge
 
 import android.util.Log
+import android.widget.Toast
+import androidx.annotation.MainThread
 import com.ngmatt.weedmapsandroidcodechallenge.models.Business
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusiness
 import com.ngmatt.weedmapsandroidcodechallenge.models.YelpBusinessService
@@ -16,7 +18,6 @@ private const val LATITUDE: Float = 37.786882F
 private const val LONGITUDE: Float = -122.399972F
 private const val BASE_URL: String = "https://api.yelp.com/v3/"
 private const val API_KEY: String = "HLI3xHwmknNcMui1Xvh-tYi6gSGvYvCHEhJ_za0QNomeSGiMZRZ9qMTAEKoIo7Ob9w-FtdO3Rp1BDyd6gMhwKZdZcQjlqGixYfmlwpW-HiyGxSGCWf6s3kvTKQR-X3Yx"
-private const val TAG: String = "DataSource"
 class DataSource{
 
     companion object{
@@ -51,8 +52,6 @@ class DataSource{
                            counter++
                        }
                        onSuccessCall(yelpData)
-                   } else {
-                       // TODO: Handle Error
                    }
             }
         }
